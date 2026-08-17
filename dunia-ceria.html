@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Dunia Ceria - Belajar Sambil Bermain</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FFF6E9;
+    --ink:#2D2A32;
+    --coral:#FF8A73;
+    --coral-dark:#F4623F;
+    --teal:#3FC7B8;
+    --teal-dark:#1FA394;
+    --sun:#FFC93C;
+    --sun-dark:#F0A800;
+    --lav:#B39DDB;
+    --lav-dark:#8E6FCB;
+    --white:#FFFFFF;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color: transparent; user-select:none;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    font-family:'Nunito', sans-serif;
+    background:
+      radial-gradient(circle at 10% 10%, #FFEFD1 0%, transparent 40%),
+      radial-gradient(circle at 90% 20%, #D9F5F1 0%, transparent 45%),
+      radial-gradient(circle at 20% 90%, #F0E6FF 0%, transparent 45%),
+      var(--cream);
+    color:var(--ink);
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+  .screen{ display:none; min-height:100vh; padding:20px; flex-direction:column; align-items:center; }
+  .screen.active{ display:flex; }
+
+  /* ---------- HOME ---------- */
+  .home-header{ text-align:center; margin-top:10px; margin-bottom:10px;}
+  .mascot{ font-size:clamp(60px,12vw,90px); display:inline-block; animation: bob 2.4s ease-in-out infinite; }
+  @keyframes bob{ 0%,100%{transform:translateY(0) rotate(-3deg);} 50%{transform:translateY(-10px) rotate(3deg);} }
+  h1.title{
+    font-family:'Fredoka', sans-serif;
+    font-size:clamp(28px,6vw,44px);
+    margin:6px 0 2px;
+    color:var(--coral-dark);
+    text-shadow: 2px 2px 0 #fff;
+  }
+  .subtitle{ font-weight:700; color:#7a7488; font-size:clamp(14px,3vw,18px); margin-bottom:20px;}
+
+  .menu-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px,1fr));
+    gap:18px;
+    width:100%;
+    max-width:680px;
+  }
+  .menu-card{
+    border:none;
+    border-radius:28px;
+    padding:22px 12px 18px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    cursor:pointer;
+    font-family:'Fredoka', sans-serif;
+    color:#fff;
+    font-size:clamp(16px,3.4vw,20px);
+    font-weight:600;
+    box-shadow: 0 8px 0 rgba(0,0,0,0.12), 0 12px 20px rgba(0,0,0,0.10);
+    transform: translateY(0);
+    transition: transform .12s ease, box-shadow .12s ease;
+    min-height:150px;
+  }
+  .menu-card:active{ transform: translateY(6px); box-shadow: 0 2px 0 rgba(0,0,0,0.12), 0 4px 10px rgba(0,0,0,0.10); }
+  .menu-card .icon{ font-size:clamp(42px,9vw,58px); filter: drop-shadow(0 3px 0 rgba(0,0,0,0.08)); }
+  .c-puzzle{ background: linear-gradient(160deg, var(--coral), var(--coral-dark)); }
+  .c-benda{ background: linear-gradient(160deg, var(--teal), var(--teal-dark)); }
+  .c-warna{ background: linear-gradient(160deg, var(--sun), var(--sun-dark)); }
+  .c-hewan{ background: linear-gradient(160deg, var(--lav), var(--lav-dark)); }
+  .c-tebak{ background: linear-gradient(160deg, #FF9BD2, #E8579F); }
+  .c-alfabet{ background: linear-gradient(160deg, #6FCF97, #2E9E64); }
+  .c-angka{ background: linear-gradient(160deg, #5DB8FF, #2E82D6); }
+  .c-satwa{ background: linear-gradient(160deg, #4FD0E5, #1F9BB0); }
+  .c-transport{ background: linear-gradient(160deg, #FFA85C, #E8792C); }
+
+  /* ---------- SHARED TOPBAR ---------- */
+  .topbar{
+    width:100%; max-width:720px;
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom:14px;
+  }
+  .home-btn{
+    background:#fff; border:none; border-radius:20px;
+    padding:10px 18px; font-size:20px; cursor:pointer;
+    box-shadow:0 5px 0 rgba(0,0,0,0.12);
+    font-family:'Fredoka',sans-serif; font-weight:600; color:var(--ink);
+  }
+  .home-btn:active{ transform:translateY(4px); box-shadow:0 1px 0 rgba(0,0,0,0.12);}
+  .game-title{
+    font-family:'Fredoka',sans-serif; font-size:clamp(20px,4.4vw,28px);
+    color:var(--ink); margin:0;
+  }
+  .spacer{ width:60px; }
+
+  /* ---------- PUZZLE ---------- */
+  .slots-row, .pieces-row{
+    display:flex; flex-wrap:wrap; justify-content:center; gap:16px;
+    width:100%; max-width:640px; margin-bottom:18px;
+  }
+  .slot, .piece{
+    width:clamp(72px,18vw,100px); height:clamp(72px,18vw,100px);
+    border-radius:22px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:clamp(38px,8vw,52px);
+  }
+  .slot{
+    background:#fff;
+    border:4px dashed #D8CFE8;
+  }
+  .slot .content{ opacity:0.25; filter:grayscale(1); transition: all .25s ease;}
+  .slot.filled{ border-style:solid; border-color:var(--lav); background:#F3EEFF; }
+  .slot.filled .content{ opacity:1; filter:none; animation: pop .35s ease; }
+  .slot.wobble{ animation: wobble .4s ease; }
+  @keyframes pop{ 0%{transform:scale(0.3);} 70%{transform:scale(1.15);} 100%{transform:scale(1);} }
+  @keyframes wobble{ 0%,100%{transform:translateX(0);} 25%{transform:translateX(-8px);} 75%{transform:translateX(8px);} }
+
+  .piece{
+    background:#fff;
+    box-shadow:0 6px 0 rgba(0,0,0,0.10);
+    cursor:pointer;
+    transition: transform .12s ease;
+  }
+  .piece.selected{ transform: scale(1.12) translateY(-4px); box-shadow:0 2px 0 rgba(0,0,0,0.10), 0 0 0 5px var(--sun); }
+  .piece.used{ visibility:hidden; }
+  .piece:active{ transform: scale(0.94); }
+
+  .hint{ font-weight:700; color:#7a7488; margin-bottom:6px; text-align:center; font-size:clamp(14px,3vw,17px);}
+
+  /* ---------- GRID GAMES (benda / warna / hewan) ---------- */
+  .item-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap:16px;
+    width:100%; max-width:680px;
+  }
+  .item-card{
+    background:#fff;
+    border:none;
+    border-radius:24px;
+    padding:16px 8px;
+    display:flex; flex-direction:column; align-items:center; gap:6px;
+    cursor:pointer;
+    box-shadow:0 6px 0 rgba(0,0,0,0.08);
+    transition: transform .12s ease;
+    min-height:120px;
+    justify-content:center;
+  }
+  .item-card:active{ transform: translateY(4px) scale(0.97); }
+  .item-card .emoji{ font-size:clamp(40px,9vw,56px); }
+  .item-card .label{ font-family:'Fredoka',sans-serif; font-weight:600; font-size:clamp(13px,2.8vw,16px); text-align:center; }
+  .item-card.bounce .emoji{ animation: bounce .5s ease; }
+  @keyframes bounce{ 0%,100%{transform:translateY(0) scale(1);} 40%{transform:translateY(-14px) scale(1.1);} 70%{transform:translateY(0) scale(0.96);} }
+
+  .color-card{ color:#fff; }
+  .color-card .label{ color:#fff; text-shadow:0 1px 3px rgba(0,0,0,0.25); }
+
+  /* ---------- CELEBRATION ---------- */
+  .celebration{
+    position:fixed; inset:0; background:rgba(45,42,50,0.55);
+    display:none; align-items:center; justify-content:center; z-index:50;
+    flex-direction:column; gap:16px; text-align:center; padding:20px;
+  }
+  .celebration.show{ display:flex; }
+  .celebration .msg{
+    font-family:'Fredoka',sans-serif; font-size:clamp(30px,7vw,48px); color:#fff;
+    text-shadow:0 3px 0 rgba(0,0,0,0.2);
+  }
+  .celebration .stars{ font-size:clamp(36px,8vw,56px); }
+  .again-btn{
+    font-family:'Fredoka',sans-serif; font-weight:600; font-size:20px;
+    padding:14px 30px; border-radius:20px; border:none; cursor:pointer;
+    background:var(--sun); color:var(--ink); box-shadow:0 6px 0 var(--sun-dark);
+  }
+  .again-btn:active{ transform:translateY(4px); box-shadow:0 2px 0 var(--sun-dark); }
+
+  .confetti{
+    position:fixed; top:-20px; border-radius:3px; pointer-events:none; z-index:60;
+    animation: fall linear forwards;
+  }
+  @keyframes fall{
+    to{ transform: translateY(110vh) rotate(360deg); opacity:0.9; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration: 0.01ms !important; }
+  }
+
+  footer.tip{
+    margin-top:auto; padding-top:18px; font-size:13px; color:#a79fb5; text-align:center;
+  }
+
+  /* ---------- START / GREETING ---------- */
+  #screen-start{ justify-content:center; text-align:center; }
+  .start-card{
+    background:#fff; border-radius:32px; padding:40px 28px;
+    box-shadow:0 12px 0 rgba(0,0,0,0.08), 0 20px 30px rgba(0,0,0,0.10);
+    max-width:420px; width:100%;
+  }
+  .start-mascot{ font-size:clamp(70px,16vw,100px); display:inline-block; animation: wave 1.6s ease-in-out infinite; }
+  @keyframes wave{ 0%,100%{transform:rotate(0deg);} 25%{transform:rotate(-12deg);} 75%{transform:rotate(12deg);} }
+  .start-greet{
+    font-family:'Fredoka', sans-serif; font-size:clamp(24px,6vw,34px);
+    color:var(--coral-dark); margin:12px 0 4px;
+  }
+  .start-sub{ font-weight:700; color:#7a7488; margin-bottom:22px; font-size:clamp(14px,3.4vw,17px); }
+  .start-btn{
+    font-family:'Fredoka',sans-serif; font-weight:600; font-size:clamp(18px,4.4vw,24px);
+    padding:16px 36px; border-radius:24px; border:none; cursor:pointer;
+    background: linear-gradient(160deg, var(--sun), var(--sun-dark));
+    color:var(--ink); box-shadow:0 7px 0 var(--sun-dark);
+  }
+  .start-btn:active{ transform:translateY(5px); box-shadow:0 2px 0 var(--sun-dark); }
+
+  /* ---------- LETTER / NUMBER GRID ---------- */
+  .small-grid{ grid-template-columns: repeat(auto-fit, minmax(76px, 1fr)); gap:12px; }
+  .small-grid .item-card{ min-height:90px; padding:10px 4px; border-radius:18px; }
+  .small-grid .letter{ font-family:'Fredoka',sans-serif; font-weight:700; font-size:clamp(26px,7vw,36px); line-height:1; }
+  .small-grid .sub-emoji{ font-size:clamp(18px,4.5vw,24px); }
+  .small-grid .label{ font-size:clamp(11px,2.4vw,13px); }
+
+  .number-dots{ font-size:clamp(14px,3.4vw,18px); letter-spacing:2px; }
+
+  /* ---------- TEBAK SUARA ---------- */
+  .replay-btn{
+    font-family:'Fredoka',sans-serif; font-weight:600; font-size:18px;
+    padding:12px 24px; border-radius:20px; border:none; cursor:pointer;
+    background:#fff; color:var(--ink); box-shadow:0 5px 0 rgba(0,0,0,0.10);
+    margin-bottom:18px; display:flex; align-items:center; gap:8px;
+  }
+  .replay-btn:active{ transform:translateY(4px); box-shadow:0 1px 0 rgba(0,0,0,0.10); }
+  .progress-dots{ display:flex; gap:8px; margin-bottom:14px; }
+  .progress-dots span{ width:14px; height:14px; border-radius:50%; background:#E5DEEF; }
+  .progress-dots span.done{ background:var(--lav-dark); }
+  .tebak-options{
+    display:grid; grid-template-columns: repeat(auto-fit, minmax(120px,1fr));
+    gap:16px; width:100%; max-width:520px;
+  }
+
+  /* ---------- TABS (satwa / transportasi) ---------- */
+  .tabs{
+    display:flex; gap:10px; margin-bottom:18px; flex-wrap:wrap; justify-content:center;
+  }
+  .tab-btn{
+    font-family:'Fredoka',sans-serif; font-weight:600; font-size:clamp(14px,3.2vw,17px);
+    padding:10px 20px; border-radius:18px; border:none; cursor:pointer;
+    background:#fff; color:var(--ink); box-shadow:0 4px 0 rgba(0,0,0,0.10);
+    transition: transform .1s ease;
+  }
+  .tab-btn.active{ background:var(--lav-dark); color:#fff; box-shadow:0 4px 0 #6B4FA8; }
+  .tab-btn:active{ transform:translateY(3px); }
+</style>
+</head>
+<body>
+
+<!-- START / GREETING -->
+<div class="screen active" id="screen-start">
+  <div class="start-card">
+    <span class="start-mascot">🐱</span>
+    <div class="start-greet">Halo Husna Cantik! 👋</div>
+    <div class="start-sub">Ayo main sambil belajar bareng-bareng!</div>
+    <button class="start-btn" onclick="startGame()">Mulai Bermain 🎉</button>
+  </div>
+</div>
+
+<!-- HOME -->
+<div class="screen" id="screen-home">
+  <div class="home-header">
+    <span class="mascot">🐱</span>
+    <h1 class="title">Dunia Ceria</h1>
+    <div class="subtitle">Belajar sambil bermain, yuk!</div>
+  </div>
+  <div class="menu-grid">
+    <button class="menu-card c-puzzle" onclick="Audio.unlock(); goTo('puzzle')">
+      <span class="icon">🧩</span>
+      Puzzle Hewan
+    </button>
+    <button class="menu-card c-benda" onclick="Audio.unlock(); goTo('benda')">
+      <span class="icon">🧸</span>
+      Benda Sehari-hari
+    </button>
+    <button class="menu-card c-warna" onclick="Audio.unlock(); goTo('warna')">
+      <span class="icon">🎨</span>
+      Warna-warni
+    </button>
+    <button class="menu-card c-hewan" onclick="Audio.unlock(); goTo('hewan')">
+      <span class="icon">🐶</span>
+      Kenalan Hewan
+    </button>
+    <button class="menu-card c-tebak" onclick="Audio.unlock(); goTo('tebak')">
+      <span class="icon">🔊</span>
+      Tebak Suara Hewan
+    </button>
+    <button class="menu-card c-alfabet" onclick="Audio.unlock(); goTo('alfabet')">
+      <span class="icon">🔤</span>
+      Alfabet
+    </button>
+    <button class="menu-card c-angka" onclick="Audio.unlock(); goTo('angka')">
+      <span class="icon">🔢</span>
+      Angka
+    </button>
+    <button class="menu-card c-satwa" onclick="Audio.unlock(); goTo('satwa')">
+      <span class="icon">🐠</span>
+      Hewan Laut & Darat
+    </button>
+    <button class="menu-card c-transport" onclick="Audio.unlock(); goTo('transportasi')">
+      <span class="icon">🚗</span>
+      Transportasi
+    </button>
+  </div>
+  <footer class="tip">Untuk hasil terbaik, gunakan tablet/HP dengan suara dinyalakan 🔊</footer>
+</div>
+
+<!-- PUZZLE HEWAN -->
+<div class="screen" id="screen-puzzle">
+  <div class="topbar">
+    <button class="home-btn" onclick="goTo('home')">🏠</button>
+    <h2 class="game-title">🧩 Cocokkan Hewannya</h2>
+    <div class="spacer"></div>
+  </div>
+  <div class="hint">Sentuh hewan di bawah, lalu taruh di kotak yang cocok!</div>
+  <div class="slots-row" id="puzzle-slots"></div>
+  <div class="pieces-row" id="puzzle-pieces"></div>
+</div>
+
+<!-- BENDA SEHARI-HARI -->
+<div class="screen" id="screen-benda">
+  <div class="topbar">
+    <button class="home-btn" onclick="goTo('home')">🏠</button>
+    <h2 class="game-title">🧸 Benda Sehari-hari</h2>
+    <div class="spacer"></div>
+  </div>
+  <div class="hint">Sentuh gambarnya untuk dengar namanya!</div>
+  <div class="item-grid" id="benda-grid"></div>
+</div>
+
+<!-- WARNA -->
+<div class="screen" id="screen-warna">
+  <div class="topbar">
+    <button class="home-btn" onclick="goTo('home')">🏠</button>
+    <h2 class="game-title">🎨 Warna-warni</h2>
+    <div class="spacer"></div>
+  </div>
+  <div class="hint">Sentuh warnanya untuk dengar namanya!</div>
+  <div class="item-grid" id="warna-grid"></div>
+</div>
+
+<!-- HEWAN + SUARA -->
+<div class="screen" id="screen-hewan">
+  <div class="topbar">
+    <button class="home-btn" onclick="goTo('home')">🏠</button>
+    <h2 class="game-title">🐶 Suara Hewan</h2>
+    <div class="spacer"></div>
+  </div>
+  <div class="hint">Sentuh hewannya untuk dengar nama & suaranya!</div>
+  <div class="item-grid" id="hewan-grid"></div>
+</div>
+
+<!-- TEBAK SUARA HEWAN -->
+<div class="screen" id="screen-tebak">
+  <div class="topbar">
+    <button class="home-btn" onclick="goTo('home')">🏠</button>
+    <h2 class="game-title">🔊 Tebak Suara Hewan</h2>
+    <div class="spacer"></div>
+  </div>
+  <div class="hint" id="tebak-hint">Dengarkan suaranya, lalu tebak hewannya!</div>
+  <div class="progress-dots" id="tebak-progress"></div>
+  <button class="replay-btn" onclick="replayTebak()">🔊 Dengar Lagi</button>
+  <div class="tebak-options" id="tebak-options"></div>
+</div>
+
+<!-- ALFABET -->
+<div class="screen" id="screen-alfabet">
+  <div class="topbar">
+    <button class="home-btn" onclick="goTo('home')">🏠</button>
+    <h2 class="game-title">🔤 Alfabet</h2>
+    <div class="spacer"></div>
+  </div>
+  <div class="hint">Sentuh hurufnya untuk dengar bunyinya!</div>
+  <div class="item-grid small-grid" id="alfabet-grid"></div>
+</div>
+
+<!-- ANGKA -->
+<div class="screen" id="screen-angka">
+  <div class="topbar">
+    <button class="home-btn" onclick="goTo('home')">🏠</button>
+    <h2 class="game-title">🔢 Angka</h2>
+    <div class="spacer"></div>
+  </div>
+  <div class="hint">Sentuh angkanya untuk dengar bunyinya!</div>
+  <div class="item-grid small-grid" id="angka-grid"></div>
+</div>
+
+<!-- HEWAN LAUT & DARAT -->
+<div class="screen" id="screen-satwa">
+  <div class="topbar">
+    <button class="home-btn" onclick="goTo('home')">🏠</button>
+    <h2 class="game-title">🐠 Hewan Laut & Darat</h2>
+    <div class="spacer"></div>
+  </div>
+  <div class="hint">Sentuh gambarnya untuk dengar namanya!</div>
+  <div class="tabs" id="satwa-tabs">
+    <button class="tab-btn" data-cat="laut" onclick="switchSatwaTab('laut')">🌊 Hewan Laut</button>
+    <button class="tab-btn" data-cat="darat" onclick="switchSatwaTab('darat')">🌳 Hewan Darat</button>
+  </div>
+  <div class="item-grid" id="satwa-grid"></div>
+</div>
+
+<!-- TRANSPORTASI -->
+<div class="screen" id="screen-transportasi">
+  <div class="topbar">
+    <button class="home-btn" onclick="goTo('home')">🏠</button>
+    <h2 class="game-title">🚗 Alat Transportasi</h2>
+    <div class="spacer"></div>
+  </div>
+  <div class="hint">Sentuh gambarnya untuk dengar nama & suaranya!</div>
+  <div class="tabs" id="transport-tabs">
+    <button class="tab-btn" data-cat="darat" onclick="switchTransportTab('darat')">🚗 Darat</button>
+    <button class="tab-btn" data-cat="laut" onclick="switchTransportTab('laut')">🚢 Laut</button>
+    <button class="tab-btn" data-cat="udara" onclick="switchTransportTab('udara')">✈️ Udara</button>
+  </div>
+  <div class="item-grid" id="transport-grid"></div>
+</div>
+
+<!-- CELEBRATION OVERLAY -->
+<div class="celebration" id="celebration">
+  <div class="stars">🌟🎉🌟</div>
+  <div class="msg">Hebat sekali!</div>
+  <button class="again-btn" onclick="celebrationAgain()">Main Lagi</button>
+</div>
+
+<script>
+/* ============ DATA ============ */
+const ANIMALS = [
+  { name:"Kucing", emoji:"🐱", sound:"Meong, meong!" },
+  { name:"Anjing", emoji:"🐶", sound:"Guk, guk!" },
+  { name:"Sapi",   emoji:"🐮", sound:"Moo!" },
+  { name:"Ayam",   emoji:"🐔", sound:"Kukuruyuk!" },
+  { name:"Bebek",  emoji:"🦆", sound:"Kwek, kwek!" },
+  { name:"Kambing",emoji:"🐐", sound:"Embeek!" },
+  { name:"Singa",  emoji:"🦁", sound:"Auum!" },
+  { name:"Gajah",  emoji:"🐘", sound:"Prooot!" },
+  { name:"Kelinci",emoji:"🐰", sound:"Kelinci suka melompat-lompat!" },
+  { name:"Ikan",   emoji:"🐟", sound:"Blub, blub!" },
+  { name:"Kuda",   emoji:"🐴", sound:"Hiiihh!" },
+  { name:"Babi",   emoji:"🐷", sound:"Oink, oink!" },
+];
+
+const BENDA = [
+  { name:"Sendok", emoji:"🥄" },
+  { name:"Gelas", emoji:"🥤" },
+  { name:"Bola", emoji:"⚽" },
+  { name:"Sepatu", emoji:"👟" },
+  { name:"Topi", emoji:"🎩" },
+  { name:"Buku", emoji:"📖" },
+  { name:"Kursi", emoji:"🪑" },
+  { name:"Sikat Gigi", emoji:"🪥" },
+  { name:"Payung", emoji:"☂️" },
+  { name:"Tas", emoji:"🎒" },
+  { name:"Jam", emoji:"⏰" },
+  { name:"Sisir", emoji:"🪮" },
+];
+
+const WARNA = [
+  { name:"Merah", hex:"#FF5252", emoji:"🍎" },
+  { name:"Kuning", hex:"#FFC93C", emoji:"🍌" },
+  { name:"Biru", hex:"#2E9CF0", emoji:"🐳" },
+  { name:"Hijau", hex:"#4CAF50", emoji:"🐸" },
+  { name:"Oranye", hex:"#FF9642", emoji:"🍊" },
+  { name:"Ungu", hex:"#9C6FD6", emoji:"🍇" },
+  { name:"Merah Muda", hex:"#FF6FB0", emoji:"🌸" },
+  { name:"Coklat", hex:"#9C6B3E", emoji:"🐻" },
+];
+
+const ALFABET = [
+  { letter:"A", word:"Apel", emoji:"🍎" },
+  { letter:"B", word:"Bola", emoji:"⚽" },
+  { letter:"C", word:"Cacing", emoji:"🐛" },
+  { letter:"D", word:"Domba", emoji:"🐑" },
+  { letter:"E", word:"Es Krim", emoji:"🍦" },
+  { letter:"F", word:"Flamingo", emoji:"🦩" },
+  { letter:"G", word:"Gajah", emoji:"🐘" },
+  { letter:"H", word:"Hati", emoji:"❤️" },
+  { letter:"I", word:"Ikan", emoji:"🐟" },
+  { letter:"J", word:"Jeruk", emoji:"🍊" },
+  { letter:"K", word:"Kucing", emoji:"🐱" },
+  { letter:"L", word:"Lebah", emoji:"🐝" },
+  { letter:"M", word:"Matahari", emoji:"☀️" },
+  { letter:"N", word:"Nanas", emoji:"🍍" },
+  { letter:"O", word:"Ombak", emoji:"🌊" },
+  { letter:"P", word:"Pisang", emoji:"🍌" },
+  { letter:"Q", word:"Quran", emoji:"📖" },
+  { letter:"R", word:"Rumah", emoji:"🏠" },
+  { letter:"S", word:"Sapi", emoji:"🐮" },
+  { letter:"T", word:"Topi", emoji:"🎩" },
+  { letter:"U", word:"Ular", emoji:"🐍" },
+  { letter:"V", word:"Vas Bunga", emoji:"🏺" },
+  { letter:"W", word:"Wortel", emoji:"🥕" },
+  { letter:"X", word:"Xilofon", emoji:"🎹" },
+  { letter:"Y", word:"Yoyo", emoji:"🪀" },
+  { letter:"Z", word:"Zebra", emoji:"🦓" },
+];
+
+const ANGKA = [
+  { num:1, word:"Satu" },
+  { num:2, word:"Dua" },
+  { num:3, word:"Tiga" },
+  { num:4, word:"Empat" },
+  { num:5, word:"Lima" },
+  { num:6, word:"Enam" },
+  { num:7, word:"Tujuh" },
+  { num:8, word:"Delapan" },
+  { num:9, word:"Sembilan" },
+  { num:10, word:"Sepuluh" },
+];
+
+const HEWAN_LAUT = [
+  { name:"Ikan", emoji:"🐠" },
+  { name:"Paus", emoji:"🐳" },
+  { name:"Lumba-lumba", emoji:"🐬" },
+  { name:"Hiu", emoji:"🦈" },
+  { name:"Kepiting", emoji:"🦀" },
+  { name:"Gurita", emoji:"🐙" },
+  { name:"Penyu", emoji:"🐢" },
+  { name:"Ubur-ubur", emoji:"🪼" },
+  { name:"Udang", emoji:"🦐" },
+  { name:"Cumi-cumi", emoji:"🦑" },
+];
+
+const HEWAN_DARAT = [
+  { name:"Singa", emoji:"🦁" },
+  { name:"Harimau", emoji:"🐯" },
+  { name:"Jerapah", emoji:"🦒" },
+  { name:"Zebra", emoji:"🦓" },
+  { name:"Monyet", emoji:"🐵" },
+  { name:"Beruang", emoji:"🐻" },
+  { name:"Rusa", emoji:"🦌" },
+  { name:"Landak", emoji:"🦔" },
+  { name:"Rubah", emoji:"🦊" },
+  { name:"Serigala", emoji:"🐺" },
+];
+
+const TRANSPORT_DARAT = [
+  { name:"Mobil", emoji:"🚗", sound:"Ngeng, ngeng!" },
+  { name:"Motor", emoji:"🏍️", sound:"Brum, brum!" },
+  { name:"Bus", emoji:"🚌", sound:"Tin, tin!" },
+  { name:"Sepeda", emoji:"🚲", sound:"Kring, kring!" },
+  { name:"Kereta Api", emoji:"🚆", sound:"Tuut! Cuff cuff cuff!" },
+  { name:"Truk", emoji:"🚚", sound:"Brum, brum besar!" },
+  { name:"Ambulans", emoji:"🚑", sound:"Nguing, nguing!" },
+  { name:"Becak", emoji:"🛺", sound:"Kring, kring!" },
+];
+
+const TRANSPORT_LAUT = [
+  { name:"Kapal Laut", emoji:"🚢", sound:"Tuuut!" },
+  { name:"Perahu Layar", emoji:"⛵", sound:"Byur, byur!" },
+  { name:"Perahu Cepat", emoji:"🚤", sound:"Ngeng, kencang!" },
+  { name:"Kapal Feri", emoji:"⛴️", sound:"Tuuut!" },
+  { name:"Kapal Pesiar", emoji:"🛳️", sound:"Tuuut, besar!" },
+];
+
+const TRANSPORT_UDARA = [
+  { name:"Pesawat", emoji:"✈️", sound:"Wuuuz!" },
+  { name:"Helikopter", emoji:"🚁", sound:"Wuk, wuk, wuk!" },
+  { name:"Pesawat Kecil", emoji:"🛩️", sound:"Wuuuz kecil!" },
+  { name:"Roket", emoji:"🚀", sound:"Duaar, meluncur!" },
+];
+
+/* ============ AUDIO HELPERS ============ */
+const Audio = {
+  unlocked:false,
+  voice:null,
+  unlock(){
+    if(this.unlocked) return;
+    this.unlocked = true;
+    // warm up speech synthesis (some browsers need a first silent call)
+    try{
+      const u = new SpeechSynthesisUtterance(' ');
+      speechSynthesis.speak(u);
+    }catch(e){}
+    this.pickVoice();
+  },
+  pickVoice(){
+    const setVoice = () => {
+      const voices = speechSynthesis.getVoices();
+      this.voice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('id')) || null;
+    };
+    setVoice();
+    speechSynthesis.onvoiceschanged = setVoice;
+  },
+  speak(text){
+    try{
+      speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'id-ID';
+      if(this.voice) u.voice = this.voice;
+      u.rate = 0.88;
+      u.pitch = 1.25;
+      speechSynthesis.speak(u);
+    }catch(e){}
+  },
+  speakKid(text){
+    try{
+      speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'id-ID';
+      if(this.voice) u.voice = this.voice;
+      u.rate = 0.95;
+      u.pitch = 1.85;
+      speechSynthesis.speak(u);
+    }catch(e){}
+  },
+  chime(happy=true){
+    try{
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const notes = happy ? [523.25, 659.25, 783.99] : [392.00, 349.23];
+      notes.forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.001, ctx.currentTime + i*0.12);
+        gain.gain.exponentialRampToValueAtTime(0.25, ctx.currentTime + i*0.12 + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i*0.12 + 0.28);
+        osc.connect(gain).connect(ctx.destination);
+        osc.start(ctx.currentTime + i*0.12);
+        osc.stop(ctx.currentTime + i*0.12 + 0.3);
+      });
+    }catch(e){}
+  }
+};
+
+/* ============ NAVIGATION ============ */
+function goTo(screen){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + screen).classList.add('active');
+  if(screen === 'puzzle') initPuzzle();
+  if(screen === 'benda') initBenda();
+  if(screen === 'warna') initWarna();
+  if(screen === 'hewan') initHewan();
+  if(screen === 'tebak') initTebak();
+  if(screen === 'alfabet') initAlfabet();
+  if(screen === 'angka') initAngka();
+  if(screen === 'satwa') initSatwa();
+  if(screen === 'transportasi') initTransport();
+  if(screen === 'home') Audio.speak('Ayo pilih permainan!');
+}
+
+function startGame(){
+  Audio.unlock();
+  Audio.speak('Halo Husna cantik! Ayo main sambil belajar!');
+  setTimeout(() => goTo('home'), 600);
+}
+
+function shuffle(arr){
+  const a = [...arr];
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+/* ============ CONFETTI ============ */
+function confettiBurst(colors){
+  const count = 26;
+  for(let i=0;i<count;i++){
+    const el = document.createElement('div');
+    el.className = 'confetti';
+    const size = 8 + Math.random()*8;
+    el.style.width = size + 'px';
+    el.style.height = (size*0.6) + 'px';
+    el.style.left = Math.random()*100 + 'vw';
+    el.style.background = colors[Math.floor(Math.random()*colors.length)];
+    const duration = 1.6 + Math.random()*1.2;
+    el.style.animationDuration = duration + 's';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), duration*1000 + 100);
+  }
+}
+
+/* ============ CELEBRATION ============ */
+let celebrationCallback = null;
+function showCelebration(onAgain){
+  celebrationCallback = onAgain;
+  document.getElementById('celebration').classList.add('show');
+  confettiBurst(['#FF8A73','#FFC93C','#3FC7B8','#B39DDB','#FF6FB0']);
+  Audio.speak('Hebat sekali! Kamu pintar!');
+  Audio.chime(true);
+}
+function celebrationAgain(){
+  document.getElementById('celebration').classList.remove('show');
+  if(celebrationCallback) celebrationCallback();
+}
+
+/* ============ PUZZLE HEWAN ============ */
+let puzzleState = { animals:[], selectedIndex:null, matched:0 };
+
+function initPuzzle(){
+  const pick = shuffle(ANIMALS).slice(0,4);
+  puzzleState = { animals: pick, selectedIndex:null, matched:0 };
+
+  const slotsEl = document.getElementById('puzzle-slots');
+  slotsEl.innerHTML = '';
+  pick.forEach((a, idx) => {
+    const slot = document.createElement('div');
+    slot.className = 'slot';
+    slot.dataset.name = a.name;
+    slot.dataset.idx = idx;
+    slot.innerHTML = `<span class="content">${a.emoji}</span>`;
+    slot.onclick = () => trySlot(slot);
+    slotsEl.appendChild(slot);
+  });
+
+  const piecesEl = document.getElementById('puzzle-pieces');
+  piecesEl.innerHTML = '';
+  shuffle(pick).forEach((a, idx) => {
+    const piece = document.createElement('div');
+    piece.className = 'piece';
+    piece.dataset.name = a.name;
+    piece.textContent = a.emoji;
+    piece.onclick = () => selectPiece(piece);
+    piecesEl.appendChild(piece);
+  });
+}
+
+function selectPiece(piece){
+  if(piece.classList.contains('used')) return;
+  document.querySelectorAll('#puzzle-pieces .piece').forEach(p => p.classList.remove('selected'));
+  piece.classList.add('selected');
+  puzzleState.selectedIndex = piece;
+  const animal = ANIMALS.find(a => a.name === piece.dataset.name);
+  Audio.speak(animal.name);
+}
+
+function trySlot(slot){
+  const piece = puzzleState.selectedIndex;
+  if(!piece) { Audio.speak('Pilih hewannya dulu ya'); return; }
+  if(slot.classList.contains('filled')) return;
+
+  if(slot.dataset.name === piece.dataset.name){
+    slot.classList.add('filled');
+    piece.classList.add('used');
+    piece.classList.remove('selected');
+    puzzleState.selectedIndex = null;
+    puzzleState.matched++;
+    Audio.chime(true);
+    const animal = ANIMALS.find(a => a.name === slot.dataset.name);
+    Audio.speak(`Benar! Ini ${animal.name}`);
+    if(puzzleState.matched >= puzzleState.animals.length){
+      setTimeout(() => showCelebration(initPuzzle), 500);
+    }
+  } else {
+    slot.classList.add('wobble');
+    Audio.chime(false);
+    Audio.speak('Coba lagi ya');
+    setTimeout(() => slot.classList.remove('wobble'), 400);
+  }
+}
+
+/* ============ BENDA SEHARI-HARI ============ */
+function initBenda(){
+  const grid = document.getElementById('benda-grid');
+  grid.innerHTML = '';
+  BENDA.forEach(item => {
+    const card = document.createElement('button');
+    card.className = 'item-card';
+    card.innerHTML = `<span class="emoji">${item.emoji}</span><span class="label">${item.name}</span>`;
+    card.onclick = () => {
+      card.classList.remove('bounce'); void card.offsetWidth; card.classList.add('bounce');
+      Audio.speak(`Ini ${item.name}`);
+      Audio.chime(true);
+    };
+    grid.appendChild(card);
+  });
+}
+
+/* ============ WARNA ============ */
+function initWarna(){
+  const grid = document.getElementById('warna-grid');
+  grid.innerHTML = '';
+  WARNA.forEach(item => {
+    const card = document.createElement('button');
+    card.className = 'item-card color-card';
+    card.style.background = item.hex;
+    card.innerHTML = `<span class="emoji">${item.emoji}</span><span class="label">${item.name}</span>`;
+    card.onclick = () => {
+      card.classList.remove('bounce'); void card.offsetWidth; card.classList.add('bounce');
+      Audio.speak(`Warna ${item.name}`);
+      Audio.chime(true);
+      confettiBurst([item.hex]);
+    };
+    grid.appendChild(card);
+  });
+}
+
+/* ============ HEWAN + SUARA ============ */
+function initHewan(){
+  const grid = document.getElementById('hewan-grid');
+  grid.innerHTML = '';
+  ANIMALS.forEach(item => {
+    const card = document.createElement('button');
+    card.className = 'item-card';
+    card.innerHTML = `<span class="emoji">${item.emoji}</span><span class="label">${item.name}</span>`;
+    card.onclick = () => {
+      card.classList.remove('bounce'); void card.offsetWidth; card.classList.add('bounce');
+      Audio.speak(`${item.name}. ${item.sound}`);
+      Audio.chime(true);
+    };
+    grid.appendChild(card);
+  });
+}
+
+/* ============ TEBAK SUARA HEWAN ============ */
+let tebakState = { target:null, round:0, total:5 };
+
+function initTebak(){
+  tebakState = { target:null, round:0, total:5 };
+  nextTebakRound();
+}
+
+function renderTebakProgress(){
+  const el = document.getElementById('tebak-progress');
+  el.innerHTML = '';
+  for(let i=0;i<tebakState.total;i++){
+    const dot = document.createElement('span');
+    if(i < tebakState.round) dot.classList.add('done');
+    el.appendChild(dot);
+  }
+}
+
+function nextTebakRound(){
+  if(tebakState.round >= tebakState.total){
+    setTimeout(() => showCelebration(initTebak), 400);
+    return;
+  }
+  const target = ANIMALS[Math.floor(Math.random()*ANIMALS.length)];
+  const others = shuffle(ANIMALS.filter(a => a.name !== target.name)).slice(0,3);
+  const options = shuffle([target, ...others]);
+  tebakState.target = target;
+
+  renderTebakProgress();
+
+  const optEl = document.getElementById('tebak-options');
+  optEl.innerHTML = '';
+  options.forEach(a => {
+    const card = document.createElement('button');
+    card.className = 'item-card';
+    card.innerHTML = `<span class="emoji">${a.emoji}</span><span class="label">${a.name}</span>`;
+    card.onclick = () => checkTebak(a, card);
+    optEl.appendChild(card);
+  });
+
+  setTimeout(() => Audio.speak(target.sound), 500);
+}
+
+function replayTebak(){
+  if(tebakState.target) Audio.speak(tebakState.target.sound);
+}
+
+function checkTebak(animal, card){
+  if(animal.name === tebakState.target.name){
+    card.classList.remove('bounce'); void card.offsetWidth; card.classList.add('bounce');
+    Audio.chime(true);
+    Audio.speak(`Betul! Itu suara ${animal.name}`);
+    tebakState.round++;
+    setTimeout(nextTebakRound, 1600);
+  } else {
+    card.classList.add('wobble');
+    Audio.chime(false);
+    Audio.speak('Coba lagi ya');
+    setTimeout(() => card.classList.remove('wobble'), 400);
+  }
+}
+
+/* ============ ALFABET ============ */
+function initAlfabet(){
+  const grid = document.getElementById('alfabet-grid');
+  grid.innerHTML = '';
+  ALFABET.forEach(item => {
+    const card = document.createElement('button');
+    card.className = 'item-card';
+    card.innerHTML = `<span class="letter">${item.letter}</span><span class="sub-emoji">${item.emoji}</span><span class="label">${item.word}</span>`;
+    card.onclick = () => {
+      card.classList.remove('bounce'); void card.offsetWidth; card.classList.add('bounce');
+      Audio.speakKid(`${item.letter}. ${item.letter} untuk ${item.word}`);
+      Audio.chime(true);
+    };
+    grid.appendChild(card);
+  });
+}
+
+/* ============ ANGKA ============ */
+function initAngka(){
+  const grid = document.getElementById('angka-grid');
+  grid.innerHTML = '';
+  ANGKA.forEach(item => {
+    const card = document.createElement('button');
+    card.className = 'item-card';
+    const dots = '⭐'.repeat(item.num > 5 ? 5 : item.num);
+    card.innerHTML = `<span class="letter">${item.num}</span><span class="number-dots">${dots}${item.num>5 ? '+' : ''}</span><span class="label">${item.word}</span>`;
+    card.onclick = () => {
+      card.classList.remove('bounce'); void card.offsetWidth; card.classList.add('bounce');
+      Audio.speakKid(`${item.word}`);
+      Audio.chime(true);
+    };
+    grid.appendChild(card);
+  });
+}
+
+/* ============ HEWAN LAUT & DARAT ============ */
+let satwaCat = 'laut';
+
+function initSatwa(){
+  satwaCat = 'laut';
+  renderSatwaTabs();
+  renderSatwaGrid();
+}
+
+function switchSatwaTab(cat){
+  satwaCat = cat;
+  renderSatwaTabs();
+  renderSatwaGrid();
+  Audio.speak(cat === 'laut' ? 'Hewan laut' : 'Hewan darat');
+}
+
+function renderSatwaTabs(){
+  document.querySelectorAll('#satwa-tabs .tab-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.cat === satwaCat);
+  });
+}
+
+function renderSatwaGrid(){
+  const data = satwaCat === 'laut' ? HEWAN_LAUT : HEWAN_DARAT;
+  const grid = document.getElementById('satwa-grid');
+  grid.innerHTML = '';
+  data.forEach(item => {
+    const card = document.createElement('button');
+    card.className = 'item-card';
+    card.innerHTML = `<span class="emoji">${item.emoji}</span><span class="label">${item.name}</span>`;
+    card.onclick = () => {
+      card.classList.remove('bounce'); void card.offsetWidth; card.classList.add('bounce');
+      Audio.speak(`Ini ${item.name}`);
+      Audio.chime(true);
+    };
+    grid.appendChild(card);
+  });
+}
+
+/* ============ TRANSPORTASI ============ */
+let transportCat = 'darat';
+const TRANSPORT_MAP = { darat:TRANSPORT_DARAT, laut:TRANSPORT_LAUT, udara:TRANSPORT_UDARA };
+
+function initTransport(){
+  transportCat = 'darat';
+  renderTransportTabs();
+  renderTransportGrid();
+}
+
+function switchTransportTab(cat){
+  transportCat = cat;
+  renderTransportTabs();
+  renderTransportGrid();
+  const label = cat === 'darat' ? 'Transportasi darat' : (cat === 'laut' ? 'Transportasi laut' : 'Transportasi udara');
+  Audio.speak(label);
+}
+
+function renderTransportTabs(){
+  document.querySelectorAll('#transport-tabs .tab-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.cat === transportCat);
+  });
+}
+
+function renderTransportGrid(){
+  const data = TRANSPORT_MAP[transportCat];
+  const grid = document.getElementById('transport-grid');
+  grid.innerHTML = '';
+  data.forEach(item => {
+    const card = document.createElement('button');
+    card.className = 'item-card';
+    card.innerHTML = `<span class="emoji">${item.emoji}</span><span class="label">${item.name}</span>`;
+    card.onclick = () => {
+      card.classList.remove('bounce'); void card.offsetWidth; card.classList.add('bounce');
+      Audio.speak(`${item.name}. ${item.sound}`);
+      Audio.chime(true);
+    };
+    grid.appendChild(card);
+  });
+}
+</script>
+</body>
+</html>
