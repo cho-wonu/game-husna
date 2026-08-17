@@ -277,7 +277,7 @@
 <!-- START / GREETING -->
 <div class="screen active" id="screen-start">
   <div class="start-card">
-    <span class="start-mascot">🐱</span>
+    <span class="start-mascot">🐈</span>
     <div class="start-greet">Halo Husna Cantik! 👋</div>
     <div class="start-sub">Ayo main sambil belajar bareng-bareng!</div>
     <button class="start-btn" onclick="startGame()">Mulai Bermain 🎉</button>
@@ -287,7 +287,7 @@
 <!-- HOME -->
 <div class="screen" id="screen-home">
   <div class="home-header">
-    <span class="mascot">🐱</span>
+    <span class="mascot">🐈</span>
     <h1 class="title">Dunia Ceria</h1>
     <div class="subtitle">Belajar sambil bermain, yuk!</div>
   </div>
@@ -305,7 +305,7 @@
       Warna-warni
     </button>
     <button class="menu-card c-hewan" onclick="Audio.unlock(); goTo('hewan')">
-      <span class="icon">🐶</span>
+      <span class="icon">🐕</span>
       Kenalan Hewan
     </button>
     <button class="menu-card c-tebak" onclick="Audio.unlock(); goTo('tebak')">
@@ -370,7 +370,7 @@
 <div class="screen" id="screen-hewan">
   <div class="topbar">
     <button class="home-btn" onclick="goTo('home')">🏠</button>
-    <h2 class="game-title">🐶 Suara Hewan</h2>
+    <h2 class="game-title">🐕 Suara Hewan</h2>
     <div class="spacer"></div>
   </div>
   <div class="hint">Sentuh hewannya untuk dengar nama & suaranya!</div>
@@ -454,18 +454,18 @@
 <script>
 /* ============ DATA ============ */
 const ANIMALS = [
-  { name:"Kucing", emoji:"🐱", sound:"Meong, meong!" },
-  { name:"Anjing", emoji:"🐶", sound:"Guk, guk!" },
-  { name:"Sapi",   emoji:"🐮", sound:"Moo!" },
+  { name:"Kucing", emoji:"🐈", sound:"Meong, meong!" },
+  { name:"Anjing", emoji:"🐕", sound:"Guk, guk!" },
+  { name:"Sapi",   emoji:"🐄", sound:"Moo!" },
   { name:"Ayam",   emoji:"🐔", sound:"Kukuruyuk!" },
   { name:"Bebek",  emoji:"🦆", sound:"Kwek, kwek!" },
   { name:"Kambing",emoji:"🐐", sound:"Embeek!" },
   { name:"Singa",  emoji:"🦁", sound:"Auum!" },
   { name:"Gajah",  emoji:"🐘", sound:"Prooot!" },
-  { name:"Kelinci",emoji:"🐰", sound:"Kelinci suka melompat-lompat!" },
+  { name:"Kelinci",emoji:"🐇", sound:"Kelinci suka melompat-lompat!" },
   { name:"Ikan",   emoji:"🐟", sound:"Blub, blub!" },
-  { name:"Kuda",   emoji:"🐴", sound:"Hiiihh!" },
-  { name:"Babi",   emoji:"🐷", sound:"Oink, oink!" },
+  { name:"Kuda",   emoji:"🐎", sound:"Hiiihh!" },
+  { name:"Babi",   emoji:"🐖", sound:"Oink, oink!" },
 ];
 
 const BENDA = [
@@ -505,7 +505,7 @@ const ALFABET = [
   { letter:"H", word:"Hati", emoji:"❤️" },
   { letter:"I", word:"Ikan", emoji:"🐟" },
   { letter:"J", word:"Jeruk", emoji:"🍊" },
-  { letter:"K", word:"Kucing", emoji:"🐱" },
+  { letter:"K", word:"Kucing", emoji:"🐈" },
   { letter:"L", word:"Lebah", emoji:"🐝" },
   { letter:"M", word:"Matahari", emoji:"☀️" },
   { letter:"N", word:"Nanas", emoji:"🍍" },
@@ -513,7 +513,7 @@ const ALFABET = [
   { letter:"P", word:"Pisang", emoji:"🍌" },
   { letter:"Q", word:"Quran", emoji:"📖" },
   { letter:"R", word:"Rumah", emoji:"🏠" },
-  { letter:"S", word:"Sapi", emoji:"🐮" },
+  { letter:"S", word:"Sapi", emoji:"🐄" },
   { letter:"T", word:"Topi", emoji:"🎩" },
   { letter:"U", word:"Ular", emoji:"🐍" },
   { letter:"V", word:"Vas Bunga", emoji:"🏺" },
@@ -551,10 +551,10 @@ const HEWAN_LAUT = [
 
 const HEWAN_DARAT = [
   { name:"Singa", emoji:"🦁" },
-  { name:"Harimau", emoji:"🐯" },
+  { name:"Harimau", emoji:"🐅" },
   { name:"Jerapah", emoji:"🦒" },
   { name:"Zebra", emoji:"🦓" },
-  { name:"Monyet", emoji:"🐵" },
+  { name:"Monyet", emoji:"🐒" },
   { name:"Beruang", emoji:"🐻" },
   { name:"Rusa", emoji:"🦌" },
   { name:"Landak", emoji:"🦔" },
