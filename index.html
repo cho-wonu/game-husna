@@ -263,6 +263,13 @@
   }
   .tab-btn.active{ background:var(--lav-dark); color:#fff; box-shadow:0 4px 0 #6B4FA8; }
   .tab-btn:active{ transform:translateY(3px); }
+
+  /* ---------- TEBAK RESULT (nama hewan) ---------- */
+  .tebak-result{
+    font-family:'Fredoka',sans-serif; font-weight:700;
+    font-size:clamp(18px,4.4vw,24px); color:var(--teal-dark);
+    min-height:34px; margin-bottom:8px; text-align:center;
+  }
 </style>
 </head>
 <body>
@@ -380,6 +387,7 @@
   <div class="hint" id="tebak-hint">Dengarkan suaranya, lalu tebak hewannya!</div>
   <div class="progress-dots" id="tebak-progress"></div>
   <button class="replay-btn" onclick="replayTebak()">🔊 Dengar Lagi</button>
+  <div class="tebak-result" id="tebak-result"></div>
   <div class="tebak-options" id="tebak-options"></div>
 </div>
 
@@ -854,6 +862,7 @@ function nextTebakRound(){
   tebakState.target = target;
 
   renderTebakProgress();
+  document.getElementById('tebak-result').textContent = '';
 
   const optEl = document.getElementById('tebak-options');
   optEl.innerHTML = '';
@@ -877,6 +886,7 @@ function checkTebak(animal, card){
     card.classList.remove('bounce'); void card.offsetWidth; card.classList.add('bounce');
     Audio.chime(true);
     Audio.speak(`Betul! Itu suara ${animal.name}`);
+    document.getElementById('tebak-result').textContent = `🎉 Itu suara ${animal.name}!`;
     tebakState.round++;
     setTimeout(nextTebakRound, 1600);
   } else {
