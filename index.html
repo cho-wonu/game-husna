@@ -87,6 +87,7 @@
   .c-angka{ background: linear-gradient(160deg, #5DB8FF, #2E82D6); }
   .c-satwa{ background: linear-gradient(160deg, #4FD0E5, #1F9BB0); }
   .c-transport{ background: linear-gradient(160deg, #FFA85C, #E8792C); }
+  .c-buah{ background: linear-gradient(160deg, #FF6B6B, #E03E3E); }
 
   /* ---------- SHARED TOPBAR ---------- */
   .topbar{
@@ -328,6 +329,10 @@
       <span class="icon">🚗</span>
       Transportasi
     </button>
+    <button class="menu-card c-buah" onclick="Audio.unlock(); goTo('buah')">
+      <span class="icon">🍎</span>
+      Buah-buahan
+    </button>
   </div>
   <footer class="tip">Untuk hasil terbaik, gunakan tablet/HP dengan suara dinyalakan 🔊</footer>
 </div>
@@ -444,6 +449,17 @@
   <div class="item-grid" id="transport-grid"></div>
 </div>
 
+<!-- BUAH-BUAHAN -->
+<div class="screen" id="screen-buah">
+  <div class="topbar">
+    <button class="home-btn" onclick="goTo('home')">🏠</button>
+    <h2 class="game-title">🍎 Buah-buahan</h2>
+    <div class="spacer"></div>
+  </div>
+  <div class="hint">Sentuh buahnya untuk dengar namanya!</div>
+  <div class="item-grid" id="buah-grid"></div>
+</div>
+
 <!-- CELEBRATION OVERLAY -->
 <div class="celebration" id="celebration">
   <div class="stars">🌟🎉🌟</div>
@@ -466,7 +482,37 @@ const ANIMALS = [
   { name:"Ikan",   emoji:"🐟", sound:"Blub, blub!" },
   { name:"Kuda",   emoji:"🐎", sound:"Hiiihh!" },
   { name:"Babi",   emoji:"🐖", sound:"Oink, oink!" },
+  { name:"Kupu-kupu", emoji:"🦋", sound:"Terbang kesana kemari!" },
+  { name:"Kakatua", emoji:"🦜", sound:"Halo, halo!" },
+  { name:"Kura-kura", emoji:"🐢", sound:"Pelan, pelan!" },
+  { name:"Laba-laba", emoji:"🕷️", sound:"Merajut sarang!" },
+  { name:"Semut", emoji:"🐜", sound:"Kerja sama, yuk!" },
+  { name:"Siput", emoji:"🐌", sound:"Pelan sekali!" },
+  { name:"Keledai", emoji:"🫏", sound:"Hin-ham!" },
+  { name:"Angsa", emoji:"🦢", sound:"Kwiit, kwiit!" },
 ];
+
+/* 15 hewan tambahan khusus untuk game Tebak Suara Hewan */
+const TEBAK_EXTRA = [
+  { name:"Kuda Nil", emoji:"🦛", sound:"Hoahm, hoahm!" },
+  { name:"Buaya",    emoji:"🐊", sound:"Haap!" },
+  { name:"Katak",    emoji:"🐸", sound:"Kwok, kwok!" },
+  { name:"Burung Hantu", emoji:"🦉", sound:"Uhuk, uhuk!" },
+  { name:"Domba",    emoji:"🐑", sound:"Mbeek, mbeek!" },
+  { name:"Ular",     emoji:"🐍", sound:"Sssss!" },
+  { name:"Lebah",    emoji:"🐝", sound:"Wuzzz!" },
+  { name:"Burung",   emoji:"🐦", sound:"Cit, cuit!" },
+  { name:"Merpati",  emoji:"🕊️", sound:"Kurkuk, kurkuk!" },
+  { name:"Serigala", emoji:"🐺", sound:"Auuu!" },
+  { name:"Rubah",    emoji:"🦊", sound:"Ngeek, ngeek!" },
+  { name:"Beruang",  emoji:"🐻", sound:"Grrrr!" },
+  { name:"Tikus",    emoji:"🐁", sound:"Cit, cit!" },
+  { name:"Anjing Laut", emoji:"🦭", sound:"Oek, oek!" },
+  { name:"Merak",    emoji:"🦚", sound:"Kwaak!" },
+];
+
+/* Kumpulan hewan yang dipakai khusus di game Tebak Suara Hewan */
+const TEBAK_POOL = ANIMALS.concat(TEBAK_EXTRA);
 
 const BENDA = [
   { name:"Sendok", emoji:"🥄" },
@@ -481,6 +527,16 @@ const BENDA = [
   { name:"Tas", emoji:"🎒" },
   { name:"Jam", emoji:"⏰" },
   { name:"Sisir", emoji:"🪮" },
+  { name:"Piring", emoji:"🍽️" },
+  { name:"Garpu", emoji:"🍴" },
+  { name:"Pensil", emoji:"✏️" },
+  { name:"Gunting", emoji:"✂️" },
+  { name:"Kunci", emoji:"🔑" },
+  { name:"Lampu", emoji:"💡" },
+  { name:"Handphone", emoji:"📱" },
+  { name:"Kaos Kaki", emoji:"🧦" },
+  { name:"Baju", emoji:"👕" },
+  { name:"Celana", emoji:"👖" },
 ];
 
 const WARNA = [
@@ -547,6 +603,13 @@ const HEWAN_LAUT = [
   { name:"Ubur-ubur", emoji:"🪼" },
   { name:"Udang", emoji:"🦐" },
   { name:"Cumi-cumi", emoji:"🦑" },
+  { name:"Ikan Buntal", emoji:"🐡" },
+  { name:"Kerang", emoji:"🐚" },
+  { name:"Terumbu Karang", emoji:"🪸" },
+  { name:"Berang-berang Laut", emoji:"🦦" },
+  { name:"Penguin", emoji:"🐧" },
+  { name:"Paus Biru", emoji:"🐋" },
+  { name:"Buaya", emoji:"🐊" },
 ];
 
 const HEWAN_DARAT = [
@@ -560,6 +623,13 @@ const HEWAN_DARAT = [
   { name:"Landak", emoji:"🦔" },
   { name:"Rubah", emoji:"🦊" },
   { name:"Serigala", emoji:"🐺" },
+  { name:"Unta", emoji:"🐫" },
+  { name:"Panda", emoji:"🐼" },
+  { name:"Koala", emoji:"🐨" },
+  { name:"Gorila", emoji:"🦍" },
+  { name:"Kuda Nil", emoji:"🦛" },
+  { name:"Kanguru", emoji:"🦘" },
+  { name:"Tupai", emoji:"🐿️" },
 ];
 
 const TRANSPORT_DARAT = [
@@ -571,6 +641,12 @@ const TRANSPORT_DARAT = [
   { name:"Truk", emoji:"🚚", sound:"Brum, brum besar!" },
   { name:"Ambulans", emoji:"🚑", sound:"Nguing, nguing!" },
   { name:"Becak", emoji:"🛺", sound:"Kring, kring!" },
+  { name:"Mobil Pemadam", emoji:"🚒", sound:"Nguing, nguing!" },
+  { name:"Mobil Polisi", emoji:"🚓", sound:"Wiw, wiw!" },
+  { name:"Taksi", emoji:"🚕", sound:"Ngeng, ngeng!" },
+  { name:"Traktor", emoji:"🚜", sound:"Brum, brum!" },
+  { name:"Skuter", emoji:"🛵", sound:"Ngeng!" },
+  { name:"Trem", emoji:"🚋", sound:"Klining, klining!" },
 ];
 
 const TRANSPORT_LAUT = [
@@ -579,6 +655,9 @@ const TRANSPORT_LAUT = [
   { name:"Perahu Cepat", emoji:"🚤", sound:"Ngeng, kencang!" },
   { name:"Kapal Feri", emoji:"⛴️", sound:"Tuuut!" },
   { name:"Kapal Pesiar", emoji:"🛳️", sound:"Tuuut, besar!" },
+  { name:"Kano", emoji:"🛶", sound:"Cpruk, cpruk!" },
+  { name:"Perahu Motor", emoji:"🛥️", sound:"Ngeng, kencang!" },
+  { name:"Jangkar", emoji:"⚓", sound:"Kapal pun berhenti!" },
 ];
 
 const TRANSPORT_UDARA = [
@@ -586,6 +665,28 @@ const TRANSPORT_UDARA = [
   { name:"Helikopter", emoji:"🚁", sound:"Wuk, wuk, wuk!" },
   { name:"Pesawat Kecil", emoji:"🛩️", sound:"Wuuuz kecil!" },
   { name:"Roket", emoji:"🚀", sound:"Duaar, meluncur!" },
+  { name:"Layang-layang", emoji:"🪁", sound:"Terbang tinggi sekali!" },
+  { name:"Parasut", emoji:"🪂", sound:"Melayang turun pelan!" },
+  { name:"Piring Terbang", emoji:"🛸", sound:"Wuss, misterius!" },
+];
+
+const BUAH = [
+  { name:"Apel", emoji:"🍎" },
+  { name:"Pisang", emoji:"🍌" },
+  { name:"Jeruk", emoji:"🍊" },
+  { name:"Anggur", emoji:"🍇" },
+  { name:"Semangka", emoji:"🍉" },
+  { name:"Mangga", emoji:"🥭" },
+  { name:"Nanas", emoji:"🍍" },
+  { name:"Stroberi", emoji:"🍓" },
+  { name:"Kelapa", emoji:"🥥" },
+  { name:"Alpukat", emoji:"🥑" },
+  { name:"Melon", emoji:"🍈" },
+  { name:"Ceri", emoji:"🍒" },
+  { name:"Persik", emoji:"🍑" },
+  { name:"Kiwi", emoji:"🥝" },
+  { name:"Lemon", emoji:"🍋" },
+  { name:"Tomat", emoji:"🍅" },
 ];
 
 /* ============ AUDIO HELPERS ============ */
@@ -665,6 +766,7 @@ function goTo(screen){
   if(screen === 'angka') initAngka();
   if(screen === 'satwa') initSatwa();
   if(screen === 'transportasi') initTransport();
+  if(screen === 'buah') initBuah();
   if(screen === 'home') Audio.speak('Ayo pilih permainan!');
 }
 
@@ -856,8 +958,8 @@ function nextTebakRound(){
     setTimeout(() => showCelebration(initTebak), 400);
     return;
   }
-  const target = ANIMALS[Math.floor(Math.random()*ANIMALS.length)];
-  const others = shuffle(ANIMALS.filter(a => a.name !== target.name)).slice(0,3);
+  const target = TEBAK_POOL[Math.floor(Math.random()*TEBAK_POOL.length)];
+  const others = shuffle(TEBAK_POOL.filter(a => a.name !== target.name)).slice(0,3);
   const options = shuffle([target, ...others]);
   tebakState.target = target;
 
@@ -1006,6 +1108,23 @@ function renderTransportGrid(){
     card.onclick = () => {
       card.classList.remove('bounce'); void card.offsetWidth; card.classList.add('bounce');
       Audio.speak(`${item.name}. ${item.sound}`);
+      Audio.chime(true);
+    };
+    grid.appendChild(card);
+  });
+}
+
+/* ============ BUAH-BUAHAN ============ */
+function initBuah(){
+  const grid = document.getElementById('buah-grid');
+  grid.innerHTML = '';
+  BUAH.forEach(item => {
+    const card = document.createElement('button');
+    card.className = 'item-card';
+    card.innerHTML = `<span class="emoji">${item.emoji}</span><span class="label">${item.name}</span>`;
+    card.onclick = () => {
+      card.classList.remove('bounce'); void card.offsetWidth; card.classList.add('bounce');
+      Audio.speak(`Buah ${item.name}`);
       Audio.chime(true);
     };
     grid.appendChild(card);
